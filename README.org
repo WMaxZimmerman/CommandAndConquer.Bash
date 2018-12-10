@@ -5,13 +5,17 @@ A set of bash functions that aim to help to allow you to write self documenting 
 #+BEGIN_SRC Bash
 alias ex="'example'"
 function example {
+    # === state what your parameters are ===
     declare -a paramNames=(
 	"env:enum:required:prod|cert|qual|devl"
 	"queue:string"
 	"query:string"
 	"rank:number")
+
+    # === Verify and set parameters ===
     verifyParameters "$@" || return 1
 
+    # === Do your stuff here ===
     echo "$env $queue $query $rank"
     echo "Something"
 }
