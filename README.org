@@ -70,4 +70,6 @@ function example {
     echo "$env $queue $query $rank"
     echo "Something"
 }
+
+ex --env prod --queue something --query filter --rank 5
 #+END_SRC
