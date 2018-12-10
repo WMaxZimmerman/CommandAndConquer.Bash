@@ -1,6 +1,30 @@
 # CommandAndConquer.Bash
-A set of bash functions that aim to help to allow you to write self documenting bash function.
 
+* Background
+I write a lot of aliases and function for my team at work to do various things. 
+One of the issues that I was having was, "how do I make sure the team knows how 
+to use the aliases that I make?" To solve this I started to create an extra 
+function for every alias that I made that was the name of that alias with a '?' 
+appended to the end. This would allow my team to add a '?' at the end of an 
+alias to output information about how to use it.
+
+This worked for the most part, but it got rather tedious to try to make sure 
+that all of my aliases were documented. Not only that, but also if a co-worker 
+wanted to write an alias they need to remember to create the documentation 
+function as well. Obviously this wasn't a very good long lasting solution. 
+
+In the passed I had a similar problem when creating command line applications in
+.Net. To solve that problem I had created [[https://github.com/WMaxZimmerman/CommandAndConquer][CommandAndConquer]]. In an effort to solve
+this issue I set out to create a similar solution for bash. This is what I have 
+created so far.
+
+* Summary
+The idea is that you can specify what you expect for parameters and then a 
+process will verify those parameters and then either set the values or output an 
+error message to the user. The process should also output documentation on the 
+command when given a '?' as the final argument. 
+
+* Example
 #+NAME: Example_Usage
 #+BEGIN_SRC Bash
 alias ex="'example'"
