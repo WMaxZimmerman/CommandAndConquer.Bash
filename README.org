@@ -1,2 +1,18 @@
 # CommandAndConquer.Bash
 A set of bash functions that aim to help to allow you to write self documenting bash function.
+
+#+NAME: Example_Usage
+#+BEGIN_SRC Bash
+alias ex="'example'"
+function example {
+    declare -a paramNames=(
+	"env:enum:required:prod|cert|qual|devl"
+	"queue:string"
+	"query:string"
+	"rank:number")
+    verifyParameters "$@" || return 1
+
+    echo "$env $queue $query $rank"
+    echo "Something"
+}
+#+END_SRC
