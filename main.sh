@@ -103,6 +103,7 @@ function verifyEnum {
 }
 
 function outputUsage {
+    echo "$description"
     for p in ${paramNames[@]}; do
 	local isEnum=false
 	local pRequired=""
