@@ -28,28 +28,34 @@ command when given a '?' as the final argument.
 Create an array of expected parameters. The pattern and order for how you setup 
 the parameters is important. The pattern can be found below.
 
+** Parameter Pattern
 "<name>:<type>:<required>:<values>"
 
-** Name
-This can be what ever you would want the name of your variable to be.
-** Type
-This is the type of the variable.
-*** String
-Any string value.
-*** Number
-Any number value. This includes negatives, decimals, and integers
-** Required
-This tells if the parameter is required or not.
-*** required
-If given this value that parameter will be required for the function to execute.
-*** optional
-If given this parameter will not be required and can be ignored.
-** Values
-This is where you can specify excepted values for the parameter. If you specify 
-values then the user will be kicked out of execution with any invalid entry.
-*** Notes
-The values in this section should be delimited by "|". Do not put spaces between 
-them as they will most likely get separated prematurely.
+*** Name
+ This can be what ever you would want the name of your variable to be.
+*** Type
+ This is the type of the variable.
+**** String
+ Any string value.
+**** Number
+ Any number value. This includes negatives, decimals, and integers
+*** Required
+ This tells if the parameter is required or not.
+**** required
+ If given this value that parameter will be required for the function to execute.
+**** optional
+ If given this parameter will not be required and can be ignored.
+*** Values
+ This is where you can specify excepted values for the parameter. If you specify 
+ values then the user will be kicked out of execution with any invalid entry.
+**** Notes
+ The values in this section should be delimited by "|". Do not put spaces between 
+ them as they will most likely get separated prematurely.
+
+** Calling Usage
+When calling a function you need to use the pattern of "--name". If you don't 
+provide the -- in front of the name of the parameter then the function doesn't 
+know that it is a parameter. 
 
 * Example
 #+NAME: Example_Usage
