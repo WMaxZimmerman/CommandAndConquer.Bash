@@ -24,6 +24,9 @@ function verifyParameter {
     local isEnum=false
     local isRequired=false
     local hasValue=false
+
+    
+    # === Get details for the parameter ===
     local indx=0
     IFS=':' read -ra ADDR <<< "$p"
     for i in "${ADDR[@]}"; do
@@ -41,11 +44,29 @@ function verifyParameter {
 	fi
 	local indx=$((indx+1))
     done
-    
+
+
+    # === Get the short name for the parameter ===
+    local indx=0
+    IFS='|' read -ra ADDR <<< "$pName"
+    for n in "${ADDR[@]}"; do
+	if [[ $indx = 0 ]]; then
+	    local pName="$n"
+	elif [[ $indx = 1 ]]; then
+	    local pShort="$n"
+	fi
+    done
+
+    # === Check the given parameters against the expected ones ===
     local index=0
     local wasFound=false
     for param in ${params[@]}; do
+	eval "unset $pName"
 	if [[ "--$pName" == $param ]]; then
+	    local wasFound=true
+	    local value=${params[$((index+1))]}
+	    local hasValue=true
+	elif [[ "--$pShort" == $param ]]; then
 	    local wasFound=true
 	    local value=${params[$((index+1))]}
 	    local hasValue=true
@@ -54,6 +75,7 @@ function verifyParameter {
 	local index=$((index+1))
     done
 
+    # === Verify Parameter ===
     if [[ $wasFound = false ]]; then
 	verifyRequired $isRequired
     else  
@@ -64,6 +86,7 @@ function verifyParameter {
 	fi
     fi
 
+    # === Set the Parameter ===
     eval "$pName=\"$value\""
 }
 
