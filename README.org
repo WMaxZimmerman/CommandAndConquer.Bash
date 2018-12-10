@@ -55,9 +55,10 @@ the parameters is important. The pattern can be found below.
 ** Calling Usage
 When calling a function you need to use the pattern of "--name". If you don't 
 provide the -- in front of the name of the parameter then the function doesn't 
-know that it is a parameter. 
+know that it is a parameter.
 
-* Example
+* Examples
+** function
 #+NAME: Example_Usage
 #+BEGIN_SRC Bash
 alias ex="'example'"
@@ -65,9 +66,9 @@ function example {
     # === state what your parameters are ===
     declare -a paramNames=(
 	"env:enum:required:prod|cert|qual|devl"
-	"queue:string"
-	"query:string"
-	"rank:number")
+	"queue:string:optional"
+	"query:string:optional"
+	"rank:number:required")
 
     # === Verify and set parameters ===
     verifyParameters "$@" || return 1
@@ -76,6 +77,20 @@ function example {
     echo "$env $queue $query $rank"
     echo "Something"
 }
+#+END_SRC
 
+** Calling
+#+NAME: Example_Usage
+#+BEGIN_SRC Bash
 ex --env prod --queue something --query filter --rank 5
+#+END_SRC
+
+** Usage Output
+#+NAME: Example_Usage
+#+BEGIN_SRC Bash
+bleh --queue bob --query woo --rank 4 --env prod ?
+*env:enum ( prod cert qual devl )
+queue:string
+query:string
+*rank:number
 #+END_SRC
