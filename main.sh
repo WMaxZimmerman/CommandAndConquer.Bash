@@ -1,10 +1,20 @@
 function verifyParameters {
     params=("$@")
 
+    # === Clean Up ===
+    function cleanup {
+	unset params
+	unset paramNames
+	unset isValid
+	unset last
+	IFS=' '
+    }
+    
     # === Output usage if the last param is a ? ===
     for last; do true; done
     if [[ "$last" == "?" ]]; then
 	outputUsage
+	cleanup
 	return 1
     fi
 
@@ -15,8 +25,11 @@ function verifyParameters {
 
     if [ "$isValid" = false ]; then
 	echo "Invalid usage. Please use a '?' to see the usage."
+	cleanup
 	return 1
     fi
+    
+    cleanup
 }
 
 function verifyParameter {
@@ -25,7 +38,6 @@ function verifyParameter {
     local isRequired=false
     local hasValue=false
 
-    
     # === Get details for the parameter ===
     local indx=0
     IFS=':' read -ra ADDR <<< "$p"
@@ -34,6 +46,10 @@ function verifyParameter {
 	    local pName="$i"
 	elif [[ $indx = 1 ]]; then
 	    local pType="$i"
+	    local isArray=false
+	    if [[ $pType == *"[]" ]]; then
+		local isArray=true
+	    fi
 	elif [[ $indx = 2 ]]; then
 	    if [[ "$i" == "required" ]]; then
 		local isRequired=true
@@ -55,21 +71,39 @@ function verifyParameter {
 	elif [[ $indx = 1 ]]; then
 	    local pShort="$n"
 	fi
+	local indx=$((indx+1))
     done
-
+    
     # === Check the given parameters against the expected ones ===
     local index=0
     local wasFound=false
+    local paramCount=${#params[@]}
     for param in ${params[@]}; do
 	eval "unset $pName"
-	if [[ "--$pName" == $param ]]; then
+	if [[ "--$pName" == $param ]] || [[ "-$pShort" == $param ]]; then
 	    local wasFound=true
-	    local value=${params[$((index+1))]}
 	    local hasValue=true
-	elif [[ "--$pShort" == $param ]]; then
-	    local wasFound=true
-	    local value=${params[$((index+1))]}
-	    local hasValue=true
+	    if [[ $isArray == true ]]; then
+		local isParam=false
+		local COUNTER=$((index+1))
+		while [[ $isParam == false ]]; do
+		    local tempValue=${params[$COUNTER]}
+
+		    if [[ $tempValue == -* ]]; then
+			local isParam=true
+		    else
+			local value="$value $tempValue"
+		    fi
+		    
+		    let COUNTER=COUNTER+1
+
+		    if [ $COUNTER -gt $paramCount ]; then
+			local isParam=true
+		    fi
+		done
+	    else
+		local value=${params[$((index+1))]}
+	    fi
 	fi
 	
 	local index=$((index+1))
@@ -140,6 +174,8 @@ function outputUsage {
 	    elif [[ $indx = 2 ]]; then
 		if [[ "$i" == "required" ]]; then
 		    local pRequired="*"
+		else
+		    local pRequired=" "
 		fi
 	    elif [[ $indx = 3 ]]; then
 		local isEnum=true
